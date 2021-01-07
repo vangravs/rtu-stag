@@ -28,7 +28,7 @@ cd ~/
 home_path="$PWD"
 taxon_db_path="/home/groups/lu_kpmi/databases/full_ref_bafp"
 human_ref_path="/home/groups/lu_kpmi/databases/human_reference"
-sample_path="/home/groups/lu_kpmi/samples/"
+sample_path="/home/groups/lu_kpmi/renamed_samples/"
 resistome_path="/home/groups/lu_kpmi/databases/groot_db/arg-annot_index"
 
 cd ~/rtu-stag/hpc/subscripts/
