@@ -5,7 +5,7 @@ if [ -z "$STY" ]; then exec screen -dm -S lftp-file-transfer /bin/bash "$0"; fi
 # Set the variables for ftp connection.
 PROTOCOL="ftp"
 URL="10.245.1.138"
-LOCALDIR="/mnt/home/groups/lu_kpmi/raw_mgi_data2"
+LOCALDIR="/mnt/home/groups/lu_kpmi/raw_mgi_data"
 REMOTEDIR="/home"
 USER=`awk  -F, '{print $1}' /mnt/home/groups/lu_kpmi/archive/mgi_lftp_user-pass_cred/cred.txt`
 PASS=`awk  -F, '{print $2}' /mnt/home/groups/lu_kpmi/archive/mgi_lftp_user-pass_cred/cred.txt`
