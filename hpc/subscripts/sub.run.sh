@@ -47,7 +47,7 @@ mkdir "$f/stag-mwc/input"
 for fname in ${sample_path}${sample}_*.fq.gz; do # move both sample files
     trimmed=$(echo $fname | grep -o '[0-9]\+_[0-9]\+\.fq\.gz')
     trimmed2=$(echo $trimmed | grep -o "^[^_]*") # temporary fix until something better comes around
-
+    cp $fname "$f/stag-mwc/input/$trimmed"
 done
 
 cp -r "${home_path}/kraken2" "/scratch/reinis01/kraken2"
