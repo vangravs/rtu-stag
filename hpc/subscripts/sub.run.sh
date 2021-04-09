@@ -37,8 +37,6 @@ if [ ! -d "/scratch/reinis01/databases" ]; then # NB: this will cause issues if 
     cp -r "${human_ref_path}" "/scratch/reinis01/databases"
     cp -r "${taxon_db_path}" "/scratch/reinis01/databases"
     cp -r "${resistome_path}" "/scratch/reinis01/databases"
-    cp -r "${resistome_path}" "/scratch/reinis01/databases"
-
 fi
 
 cp -r "${home_path}/stag-mwc" "$f"
@@ -50,7 +48,7 @@ for fname in ${sample_path}${sample}_*.fq.gz; do # move both sample files
     cp $fname "$f/stag-mwc/input/$trimmed"
 done
 
-cp -r "${home_path}/kraken2" "/scratch/reinis01/kraken2"
+cp -r "${home_path}/kraken2" "/scratch/reinis01"
 
 cd "$f/stag-mwc"
 snakemake --use-conda --cores $threads
@@ -87,7 +85,7 @@ if [ "$run_humann" = true ] ; then
     rm "$f/stag-mwc/output_dir/humann2/concat_input_reads.fq.gz"
     rm -rf "$f/stag-mwc/output_dir/humann2/*_humann2_temp/" # the 1 isn't supposed to be static - it corresponds with the sample num
 fi
-rm -rf "$f/stag-mwc/output_dir/fastp/"
+#rm -rf "$f/stag-mwc/output_dir/fastp/"
 rm -rf "$f/stag-mwc/output_dir/host_removal/"
 #rm -rf "$f/stag-mwc/output_dir/logs/" # <- logs weigh borderline nothing - may as well leave them in
 rm "$f/stag-mwc/output_dir/kraken2/$trimmed2.kraken" # wildcard does not work here for some reason, so a temp fix is used
@@ -96,8 +94,9 @@ rm "$f/stag-mwc/output_dir/kraken2/$trimmed2.kraken" # wildcard does not work he
 datestamp=$(date -d "today" +"%Y%m%d%H%M")
 mv "$f/stag-mwc/output_dir" "$sample_path/../outputs/${sample}_${datestamp}"
 rm -rf "$f" # clean up after myself
-for file in ${sample_path}${sample}_*.fq.gz; do # move both raw analysed sample files to another directory to ease file handling
-    mv $file "$sample_path/../analysed_samples/"
-done
+
+#for file in ${sample_path}${sample}_*.fq.gz; do # move both raw analysed sample files to another directory to ease file handling
+#    mv $file "$sample_path/../analysed_samples/"
+#done
 
 # rm -rf "/scratch/reinis01/databases" # uncommenting for now to speed up analysis

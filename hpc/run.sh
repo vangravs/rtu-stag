@@ -34,6 +34,6 @@ resistome_path="/home/groups/lu_kpmi/databases/groot_db/arg-annot_index"
 cd ~/rtu-stag/hpc/subscripts/
 
 for f in ${sample_path}*_1.fq.gz; do # for name generation, don't want to trigger twice - limiting myself to the first file of the pair
-    sample=$(echo $f | grep -o '[0-9]\+_[0-9]\+\.fq\.gz' | grep -o '[0-9]\+_' | grep -o '[0-9]\+')
+    sample=$(echo $f | sed 's:.*/::' | sed 's/_[^_]*$//')
     qsub sub.run.sh -F "$sample $home_path $taxon_db_path $human_ref_path $sample_path $resistome_path" # create jobs for all of the samples
 done
