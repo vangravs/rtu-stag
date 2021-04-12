@@ -1,6 +1,6 @@
 # vim: syntax=python expandtab
 #
-#     StaG Metagenomic Workflow Collaboratioin
+#     StaG Metagenomic Workflow Collaboration
 #                 configuration file
 #
 # Configuration settings marked with [Required] are only required if the
@@ -36,7 +36,9 @@ taxonomic_profile:
     metaphlan2: False
 functional_profile:
     humann2: False
-antibiotic_resistance: True
+antibiotic_resistance:
+    groot: True
+    amrplusplus: False
 mappers:
     bbmap: False
     bowtie2: False
@@ -126,6 +128,18 @@ groot:
     maxlength: 160           # Maxlength for groot index
     covcutoff: 0.97          # Coverage cutoff for groot report
     lowcov: False            # Report ARGs with no 5' or 3' coverage. Overrides covcutoff.
+
+amrplusplus:
+    megares:
+        fasta: ""            # Leave as "" to run with megares_modified_database_v2.00.fasta or specify database path
+        annotation: ""       # Leave as "" to run with megares_modified_annotations_v2.00.csv or specify annotations path
+    rarefaction:
+        min: "5"             # Starting rarefaction level
+        max: "100"           # Ending rarefaction level
+        skip: "5"            # Number of levels to skip
+        samples: "1"         # Number of iterations to sample at
+    resistome:
+        threshold: "80"      # Resistome threshold
 
 
 #########################
