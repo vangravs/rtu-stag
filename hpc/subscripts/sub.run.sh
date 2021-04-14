@@ -22,25 +22,26 @@ taxon_db_path="$3"
 human_ref_path="$4"
 sample_path="$5"
 resistome_path="$6"
-f="/scratch/reinis01/reinis01_$sample"
+prefix="/scratch/$(whoami)"
+f="${prefix}/$(whoami)_$sample"
 
 # we need to move to the scratch dir to keep us from nuking their network infrastructure
 cd "/scratch"
 rm -rf "$f" # clear out the folder in case this sample has already been on this nod
 mkdir -p "$f"
 # # copy the database folders over - just use scratch instead of using the sample dir
-# rm -rf "/scratch/reinis01/databases"
-# cp -r "${taxon_db_path}" "/scratch/reinis01/databases"
+# rm -rf "${prefix}/databases"
+# cp -r "${taxon_db_path}" "${prefix}/databases"
 
-if [ ! -d "/scratch/reinis01/databases" ]; then # NB: this will cause issues if we ever want to update the databases
-    mkdir "/scratch/reinis01/databases"
-    cp -r "${human_ref_path}" "/scratch/reinis01/databases"
-    cp -r "${taxon_db_path}" "/scratch/reinis01/databases"
-    cp -r "${resistome_path}" "/scratch/reinis01/databases"
+if [ ! -d "${prefix}/databases" ]; then # NB: this will cause issues if we ever want to update the databases
+    mkdir "${prefix}/databases"
+    cp -r "${human_ref_path}" "${prefix}/databases"
+    cp -r "${taxon_db_path}" "${prefix}/databases"
+    cp -r "${resistome_path}" "${prefix}/databases"
 fi
 
 cp -r "${home_path}/stag-mwc" "$f"
-cp "${home_path}/rtu-stag/configs/config.hpc.yaml" "$f/stag-mwc/config.yaml" # changing the name to the default simplifies running
+sed "s:BASE_PATH:${prefix}:g" < "${home_path}/rtu-stag/configs/config.hpc.yaml" > "$f/stag-mwc/config.yaml" # changing the name to the default simplifies running
 mkdir "$f/stag-mwc/input"
 for fname in ${sample_path}${sample}_*.fq.gz; do # move both sample files
     trimmed=$(echo $fname | grep -o '[0-9]\+_[0-9]\+\.fq\.gz')
@@ -48,7 +49,7 @@ for fname in ${sample_path}${sample}_*.fq.gz; do # move both sample files
     cp $fname "$f/stag-mwc/input/$trimmed"
 done
 
-cp -r "${home_path}/kraken2" "/scratch/reinis01"
+cp -r "${home_path}/kraken2" "${prefix}"
 
 cd "$f/stag-mwc"
 snakemake --use-conda --cores $threads
@@ -99,4 +100,4 @@ rm -rf "$f" # clean up after myself
 #    mv $file "$sample_path/../analysed_samples/"
 #done
 
-# rm -rf "/scratch/reinis01/databases" # uncommenting for now to speed up analysis
+# rm -rf "${prefix}/databases" # uncommenting for now to speed up analysis

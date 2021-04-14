@@ -1,6 +1,6 @@
 # vim: syntax=python expandtab
 #
-#     StaG Metagenomic Workflow Collaboratioin
+#     StaG Metagenomic Workflow Collaboration
 #                 configuration file
 #
 # Configuration settings marked with [Required] are only required if the
@@ -12,7 +12,7 @@
 #########################
 # Run configuration
 #########################
-base_path: "/scratch/reinis01/" # change this to your download dir
+base_path: "BASE_PATH/" # change this to your download dir
 inputdir: "input"
 input_fn_pattern: "{sample}_{readpair}.fq.gz"
 outdir: "output_dir"
@@ -36,7 +36,9 @@ taxonomic_profile:
     metaphlan2: False
 functional_profile:
     humann2: False
-antibiotic_resistance: True
+antibiotic_resistance:
+    groot: True
+    amrplusplus: False
 mappers:
     bbmap: False
     bowtie2: False
@@ -84,7 +86,7 @@ kraken2:
     confidence: 0.1          # Kraken2 confidence score, float in [0,1]
     extra: ""                # Extra command line arguments for kraken2 (do not add/change output files)
     bracken:
-        kmer_distrib: "/scratch/reinis01/databases/full_ref_bafp/database150mers.kmer_distrib"     # [Required for Bracken] Path to kmer_distrib file for Kraken2 DB specified above
+        kmer_distrib: "BASE_PATH/databases/full_ref_bafp/database150mers.kmer_distrib"     # [Required for Bracken] Path to kmer_distrib file for Kraken2 DB specified above
         levels: "S G"        # Space-separated list of taxonomic levels to produce tables for (e.g. "F G S" for Family, Genus, Species)
         thresh: 10           # Threshold for minimum number of reads from Kraken
     filter_bracken:          # Arguments to filter_bracken_out.py to include/exclude certain taxa
@@ -126,6 +128,18 @@ groot:
     maxlength: 160           # Maxlength for groot index
     covcutoff: 0.97          # Coverage cutoff for groot report
     lowcov: False            # Report ARGs with no 5' or 3' coverage. Overrides covcutoff.
+
+amrplusplus:
+    megares:
+        fasta: ""            # Leave as "" to run with megares_modified_database_v2.00.fasta or specify database path
+        annotation: ""       # Leave as "" to run with megares_modified_annotations_v2.00.csv or specify annotations path
+    rarefaction:
+        min: "5"             # Starting rarefaction level
+        max: "100"           # Ending rarefaction level
+        skip: "5"            # Number of levels to skip
+        samples: "1"         # Number of iterations to sample at
+    resistome:
+        threshold: "80"      # Resistome threshold
 
 
 #########################

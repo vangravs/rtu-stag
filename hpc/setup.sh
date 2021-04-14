@@ -5,7 +5,7 @@ cd ../..
 rm -rf stag-mwc
 
 # first thing's first clone stag if it's not here already
-git clone https://github.com/lucren/stag-mwc.git stag-mwc
+git clone https://github.com/kcivkulis/stag-mwc stag-mwc
 
 # go into the folder and pull changes (mostly to deal with a case where the repohas already been pulled)
 cd stag-mwc
@@ -34,6 +34,14 @@ mv kraken2_installed kraken2
 rm -rf databases/taxon_databases
 rm -rf process/process_func_db # clear out the old database stag setup in case we've changed something
 rm -rf databases/func_databases # get rid of the functional classification databases before recreating them
+
+echo "Proceed with conda setup? (select number)"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) break;;
+        No ) exit;;
+    esac
+done
 
 # trying plan B - maybe the conda envs need to get manipulated outside of the nodes for us to be able to consistently finish
 # create a conda env 
@@ -76,5 +84,7 @@ echo "y" | conda install -c bioconda -c conda-forge humann2==2.8.1
 
 # remember that you're in the home dir (and we're expecting the repo to be cloned in the home dir)
 # and there's a bit of an odd issue in that I can only use git in the login node for some reason
-cd rtu-stag/hpc/subscripts
-qsub sub.setup.sh
+
+# Legacy code
+# cd rtu-stag/hpc/subscripts
+# qsub sub.setup.sh
