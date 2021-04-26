@@ -1,6 +1,8 @@
 #!/bin/bash
 verify_checksums=false
 
+mkdir -p ~/outputs
+
 if $verify_checksums; then
     # work out if all files have downloaded properly by verifying checksums
     cd ../samples
@@ -22,17 +24,16 @@ if $verify_checksums; then
     fi
 fi
 
-work_path="$PWD/../../"
+cd ~/
+home_path="$PWD"
 taxon_db_path="/home/groups/lu_kpmi/databases/full_ref_bafp"
 human_ref_path="/home/groups/lu_kpmi/databases/human_reference"
-<<<<<<< HEAD
 sample_path="/home/groups/lu_kpmi/renamed_samples/"
-=======
-sample_path="/home/groups/lu_kpmi/renamed_samples"
->>>>>>> 4f3fb32eb3dd999bced58eb31ccdf2d9579f37c5
 resistome_path="/home/groups/lu_kpmi/databases/groot_db/arg-annot_index"
 
-for f in ${sample_path}/*_1.fq.gz; do # for name generation, don't want to trigger twice - limiting myself to the first file of the pair
+cd ~/rtu-stag/hpc/subscripts/
+
+for f in ${sample_path}*_1.fq.gz; do # for name generation, don't want to trigger twice - limiting myself to the first file of the pair
     sample=$(echo $f | sed 's:.*/::' | sed 's/_[^_]*$//')
-    qsub subscripts/sub.run.sh -F "$sample $work_path $taxon_db_path $human_ref_path $sample_path $resistome_path" # create jobs for all of the samples
+    qsub sub.run.sh -F "$sample $home_path $taxon_db_path $human_ref_path $sample_path $resistome_path" # create jobs for all of the samples
 done

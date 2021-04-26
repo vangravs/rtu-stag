@@ -34,7 +34,6 @@ mv kraken2_installed kraken2
 rm -rf databases/taxon_databases
 rm -rf process/process_func_db # clear out the old database stag setup in case we've changed something
 rm -rf databases/func_databases # get rid of the functional classification databases before recreating them
-<<<<<<< HEAD
 
 echo "Proceed with conda setup? (select number)"
 select yn in "Yes" "No"; do
@@ -89,5 +88,3 @@ echo "y" | conda install -c bioconda -c conda-forge humann2==2.8.1
 # Legacy code
 # cd rtu-stag/hpc/subscripts
 # qsub sub.setup.sh
-=======
->>>>>>> 4f3fb32eb3dd999bced58eb31ccdf2d9579f37c5

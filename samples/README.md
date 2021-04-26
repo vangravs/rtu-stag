@@ -1,0 +1,1 @@
+Folder for keeping samples in - script will move them around automatically the sample names have to look like `..._<sample_id>_<direction_id>.fq.gz`
