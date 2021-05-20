@@ -27,10 +27,3 @@ cd kraken2
 cd ..
 rm -rf kraken2
 mv kraken2_installed kraken2
-
-# setting up the kraken2 taxon database
-#
-# purge any databases that we may have set up for this already
-rm -rf databases/taxon_databases
-rm -rf process/process_func_db # clear out the old database stag setup in case we've changed something
-rm -rf databases/func_databases # get rid of the functional classification databases before recreating them

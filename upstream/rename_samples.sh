@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This currently depends on hand-currated files sample_list*.csv.
+# This currently depends on hand-curated files sample_list*.csv.
 # TODO: automate?
 
 
@@ -13,7 +13,7 @@ OUTPUTDIR="/mnt/home/groups/lu_kpmi/renamed_samples"
 ANALYSEDDIR="/mnt/home/groups/lu_kpmi/analysed_samples"
 REGEX="/mnt/home/groups/lu_kpmi/sample_list_data/sample_list*.csv"
 
-skiplist=$((ls $OUTPUTDIR; ls $ANALYSEDDIR) | sed 's:_[1-2]\.fq\.gz$::' | sort | uniq)
+skiplist=$(ls $OUTPUTDIR; ls $ANALYSEDDIR)
 
 for i in $(awk -F "," 'NF {OFS=","; print $10, $11}' $REGEX); do # Read csv file.
   oldname=$(echo ${i} | awk -F "," '{print $1 }') # get old name from csv.
@@ -21,16 +21,7 @@ for i in $(awk -F "," 'NF {OFS=","; print $10, $11}' $REGEX); do # Read csv file
 
   echo "Processing ${oldname} -> ${newname}"
 
-  skip=false
-  for f in $skiplist; do
-    if [[ $f == ${newname} ]]; then
-      skip=true
-    fi
-  done
-  if $skip; then
-    echo "${newname} is already present, skip."
-    continue;
-  fi
+  { echo $skiplist | grep -q "$newname"; } && { echo "Skip."; continue; }
 
   if [[ "${i}" == *\-* ]]; # check if sample spans multiple barcodes (has a dash in old name).
   then
@@ -42,21 +33,19 @@ for i in $(awk -F "," 'NF {OFS=","; print $10, $11}' $REGEX); do # Read csv file
 
     # Concatenate all files in the form ${searchname}_${barcode}_${direction}.fq.gz where ${barcode} is in the indicated range.
     for direction in $(seq 1 2); do
-      for barcode in $(seq $from $to); do
-        arr+=(-name "*${searchname}_${barcode}_${direction}.fq.gz" -o)
-      done
-      find ${SOURCEDIR} -type f \( "${arr[@]}" -name "*.dummy" \) | sort | xargs cat > "${OUTPUTDIR}/${newname}_${direction}.fq.gz"
+      seq $from $to | awk -v searchname="$searchname" -v direction="$direction" \
+        '(NR>1) {print "-o"} {print "-name " searchname "_" $0 "_" direction ".fq.gz"}' | \
+        xargs find ${SOURCEDIR} -type f | xargs cat > "${OUTPUTDIR}/${newname}_${direction}.fq.gz"
+      chmod g+w "${OUTPUTDIR}/${newname}_${direction}.fq.gz"
       echo "${OUTPUTDIR}/${newname}_${direction}.fq.gz" # rename file combining seq and csv variables.
-      unset arr
     done
 
   else # rename the files that dont span multiple barcodes by simply copying.
-    # rename R1, no merging
-    find $SOURCEDIR -type f -name "${oldname}_1.fq.gz" | xargs cat > "$OUTPUTDIR/${newname}_1.fq.gz"
-    echo "$OUTPUTDIR/${newname}_1.fq.gz"
-    # rename R2, no merging
-    find $SOURCEDIR -type f -name "${oldname}_2.fq.gz" | xargs cat > "$OUTPUTDIR/${newname}_2.fq.gz"
-    echo "$OUTPUTDIR/${newname}_2.fq.gz"
+    for direction in $(seq 1 2); do
+      find $SOURCEDIR -type f -name "${oldname}_$direction.fq.gz" | xargs cat > "$OUTPUTDIR/${newname}_$direction.fq.gz"
+      chmod g+w "${OUTPUTDIR}/${newname}_$direction.fq.gz"
+      echo "$OUTPUTDIR/${newname}_$direction.fq.gz"
+    done
   fi
 done
 

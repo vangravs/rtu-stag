@@ -25,6 +25,7 @@ lftp $PROTOCOL://$URL  <<- DOWNLOAD
         ls
         mirror -c --use-pget-n=10 --parallel=2 --only-missing --max-errors=1 /home $LOCALDIR
 DOWNLOAD
+chmod g+w -R $LOCALDIR
 
 #mget -E $REGEX
 #if [ ! $? -eq 0 ]; then

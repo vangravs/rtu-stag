@@ -12,7 +12,7 @@
 #########################
 # Run configuration
 #########################
-base_path: "BASE_PATH/" # Don't touch this; this will be automatically changed.
+base_path: "${prefix}/"
 inputdir: "input"
 input_fn_pattern: "{sample}_{readpair}.fq.gz"
 outdir: "output_dir"
@@ -25,19 +25,19 @@ email: ""                    # Email to send status message after completed/fail
 #########################
 # Pipeline steps included
 #########################
-qc_reads: True
-host_removal: True
+qc_reads: ${ENABLE_QC_READS}
+host_removal: ${ENABLE_HOST_REMOVAL}
 naive:
     assess_depth: False
     sketch_compare: False
 taxonomic_profile:
     kaiju: False
-    kraken2: True
+    kraken2: ${ENABLE_KRAKEN2}
     metaphlan2: False
 functional_profile:
     humann2: False
 antibiotic_resistance:
-    groot: True
+    groot: ${ENABLE_GROOT}
     amrplusplus: False
 mappers:
     bbmap: False
@@ -86,7 +86,7 @@ kraken2:
     confidence: 0.1          # Kraken2 confidence score, float in [0,1]
     extra: ""                # Extra command line arguments for kraken2 (do not add/change output files)
     bracken:
-        kmer_distrib: "BASE_PATH/databases/full_ref_bafp/database150mers.kmer_distrib"     # [Required for Bracken] Path to kmer_distrib file for Kraken2 DB specified above
+        kmer_distrib: "${prefix}/databases/full_ref_bafp/database150mers.kmer_distrib"     # [Required for Bracken] Path to kmer_distrib file for Kraken2 DB specified above
         levels: "S G"        # Space-separated list of taxonomic levels to produce tables for (e.g. "F G S" for Family, Genus, Species)
         thresh: 10           # Threshold for minimum number of reads from Kraken
     filter_bracken:          # Arguments to filter_bracken_out.py to include/exclude certain taxa
